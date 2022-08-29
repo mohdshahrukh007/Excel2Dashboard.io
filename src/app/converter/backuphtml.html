@@ -1,0 +1,248 @@
+<div class="nav">
+    <mat-toolbar-row>
+        <mat-toolbar color="primary" class="justify-content-between">
+            <span>excel to dashboard coverter</span>
+            <span>
+                <mat-icon aria-hidden="false" class="mx-3" aria-label="Example home icon">home</mat-icon>
+            </span>
+        </mat-toolbar>
+    </mat-toolbar-row>
+
+</div>
+<form *ngIf="!showdata" (ngSubmit)="onSubmit(excelForm)" #excelForm="ngForm">
+    <div class="container col-lg-12 my-4">
+        <div class="my-4 mx-lg-3">
+            <mat-card>
+                <mat-card-title>
+                    Choose Data
+                </mat-card-title>
+                <mat-card-content>
+                    <input type="file" (change)="onFileSelected($event)" class="form-control" id="file" required
+                        [(ngModel)]="file" name="file"
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+                </mat-card-content>
+                <mat-card-actions>
+                    <button class=" mx-2 btn btn-info" [disabled]="!excelForm.form.valid">Submit</button>
+                </mat-card-actions>
+
+            </mat-card>
+
+            <mat-card>
+                <mat-card-title>
+                    Choose Data
+                </mat-card-title>
+                <mat-checkbox class="mx-3" *ngFor="let food of foods,let i = index" ngModel name={{food}}>
+                    {{food}}
+                </mat-checkbox>
+            </mat-card>
+        </div>
+
+    </div>
+    <div class="col-lg-12 container">
+        <div class="my-4 mx-lg-3">
+            <mat-card>
+                <mat-card-title>
+                    Choose Group By key
+                </mat-card-title>
+
+                <mat-form-field style="width:200px" appearance="fill">
+                    <mat-label>Key</mat-label>
+                    <select ngModel name="groupparam" id="country">
+                        <option selected="" value=""></option>
+                        <option *ngFor="let groupparam of groupparams">
+                            {{groupparam}}
+                        </option>
+                    </select>
+                    <!-- <mat-select ngModel name="groupparam">
+                        <mat-option value="" *ngFor="let groupparam of groupparams">
+                            {{groupparam}}
+                        </mat-option>
+                    </mat-select> -->
+                </mat-form-field>
+                <!-- <select ngModel name="groupparam" id="country">
+                    <option selected="" value=""></option>
+                    <option *ngFor="let groupparam of groupparams">
+                        {{groupparam}}
+                    </option>
+                </select> -->
+                <mat-card-actions>
+                    <button mat-button class="btn btn-primary" type="submit">submit</button>
+                    <button mat-button (click)="reset()" class="btn btn-danger">Reset</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <!-- <mat-radio-group aria-label="Select an option">
+                <mat-radio-button class="mx-3" *ngFor="let groupparam of groupparams,let j = index" ngModel
+                    name={{groupparam}}>
+                    {{groupparam}}
+                </mat-radio-button>
+            </mat-radio-group> -->
+
+    </div>
+</form>
+
+<!-- table by location -->
+<!-- <p>data : </p> -->
+<!-- //chart -->
+<!-- end chart  -->
+<div class="col-lg-12 container-fluid" id="target">
+    <div class="container d-flex justify-content-center DivChart">
+        <canvas class=" " id="myChart"></canvas>
+    </div>
+</div>
+<div *ngIf="!showdata" class="col-lg-12 ">
+
+    <div class="card">
+        <div class="card-header card-header-success card-header-icon">
+            <div class="card-icon"><i class="material-icons"></i></div>
+            <h4 class="card-title">Global Sales by Top Locations</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="content table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <!-- <tr *ngfor="let x of filtereddata,let i = index">
+                                    <td>
+                                        {{x[i]}}
+                                    </td>
+                                </tr> -->
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- end charts -->
+
+
+
+
+
+
+
+
+
+
+2/7/22
+latest
+<div class="nav">
+    <mat-toolbar-row>
+        <mat-toolbar color="primary" class="justify-content-between">
+            <span>excel to dashboard coverter</span>
+            <span>
+                <mat-icon aria-hidden="false" class="mx-3" aria-label="Example home icon">home</mat-icon>
+            </span>
+        </mat-toolbar>
+    </mat-toolbar-row>
+</div>
+    
+<div class="container">
+    <nav class="stepper">
+      <ul class="stepper__list">
+        <li class="stepper__list__item stepper__list__item--done">
+          <svg class="stepper__list__icon" viewbox="0 0 24 24">
+            <path class="st0" d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8zm0 1.5c-5.2 0-9.5-4.3-9.5-9.5S6.8 2.5 12 2.5s9.5 4.3 9.5 9.5-4.3 9.5-9.5 9.5z"></path>
+            <path class="st0" d="M11.1 12.9l-1.2-1.1c-.4-.3-.9-.3-1.3 0-.3.3-.4.8-.1 1.1l.1.1 1.8 1.6c.1.1.4.3.7.3.2 0 .5-.1.7-.3l3.6-4.1c.3-.3.4-.8.1-1.1l-.1-.1c-.4-.3-1-.3-1.3 0l-3 3.6z"></path>
+          </svg><span class="stepper__list__title">1. Enter details</span>
+        </li>
+        <li class="stepper__list__item stepper__list__item--done">
+          <svg class="stepper__list__icon" viewbox="0 0 24 24">
+            <path class="st0" d="M12 20c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8zm0 1.5c-5.2 0-9.5-4.3-9.5-9.5S6.8 2.5 12 2.5s9.5 4.3 9.5 9.5-4.3 9.5-9.5 9.5z"></path>
+            <path class="st0" d="M11.1 12.9l-1.2-1.1c-.4-.3-.9-.3-1.3 0-.3.3-.4.8-.1 1.1l.1.1 1.8 1.6c.1.1.4.3.7.3.2 0 .5-.1.7-.3l3.6-4.1c.3-.3.4-.8.1-1.1l-.1-.1c-.4-.3-1-.3-1.3 0l-3 3.6z"></path>
+          </svg><span class="stepper__list__title">2. Additional details</span>
+        </li>
+        <li class="stepper__list__item stepper__list__item--current">
+          <svg class="stepper__list__icon stepper__list__icon--current" width="24" height="24" viewbox="0 0 24 24">
+            <path d="M12.2 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm0 1.377a9.377 9.377 0 1 1 0-18.754 9.377 9.377 0 0 1 0 18.754zm-4-8a1.377 1.377 0 1 1 0-2.754 1.377 1.377 0 0 1 0 2.754zm4 0a1.377 1.377 0 1 1 0-2.754 1.377 1.377 0 0 1 0 2.754zm4 0a1.377 1.377 0 1 1 0-2.754 1.377 1.377 0 0 1 0 2.754z" fill="#006DFF" fill-rule="evenodd"></path>
+          </svg><span class="stepper__list__title">3. Review &amp; pay</span>
+        </li>
+        <li class="stepper__list__item stepper__list__item--pending">
+          <svg class="stepper__list__icon stepper__list__icon--current" width="24" height="24" viewbox="0 0 24 24">
+            <path d="M12 16.1c1.8 0 3.3-1.4 3.3-3.2 0-1.8-1.5-3.2-3.3-3.2s-3.3 1.4-3.3 3.2c0 1.7 1.5 3.2 3.3 3.2zm0 1.7c-2.8 0-5-2.2-5-4.9S9.2 8 12 8s5 2.2 5 4.9-2.2 4.9-5 4.9z"></path>
+          </svg><span class="stepper__list__title">4. Print your label</span>
+        </li>
+        <li class="stepper__list__item stepper__list__item--pending">
+          <svg class="stepper__list__icon stepper__list__icon--current" width="24" height="24" viewbox="0 0 24 24">
+            <path d="M12 16.1c1.8 0 3.3-1.4 3.3-3.2 0-1.8-1.5-3.2-3.3-3.2s-3.3 1.4-3.3 3.2c0 1.7 1.5 3.2 3.3 3.2zm0 1.7c-2.8 0-5-2.2-5-4.9S9.2 8 12 8s5 2.2 5 4.9-2.2 4.9-5 4.9z"></path>
+          </svg><span class="stepper__list__title">5. Next steps</span>
+        </li>
+      </ul>
+    </nav>
+</div>
+<form (ngSubmit)="onSubmit(excelForm)" #excelForm="ngForm">
+    <div class=" d-lg-flex justify-content-between col-lg-12 my-4">
+        <div class="container-fluid my-3">
+            <mat-card class="axis-container">
+                <mat-card-title>
+                    Upload Data
+                </mat-card-title>
+                <mat-card-content>
+                    <input type="file" (change)="onFileSelected($event)" [ngModelOptions]="{standalone: true}" class="form-control" id="file" required
+                        [(ngModel)]="file"
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+                </mat-card-content>
+               
+                <mat-card-title>
+                    Choose <kbd>X</kbd> axis key
+                </mat-card-title>
+                <mat-checkbox class="mx-3" *ngFor="let xaxis of xaxises,let i = index" ngModel name={{xaxis}}>
+                    {{xaxis}}
+                </mat-checkbox>
+            </mat-card>
+        </div>
+        <!-- </div> -->
+        <!-- <div class="col-lg-4  container"> -->
+        <div class="container-fluid my-3" *ngIf="excelForm.form.dirty">
+            <mat-card class="axis-container ">
+                <mat-card-title>
+                    Choose Group By key as <kbd>Y</kbd> axis
+                </mat-card-title>
+                <select   class="form-select" ngModel name="selected_groupparam" id="country">
+                    <option selected="" value=""></option>
+                    <option *ngFor="let groupparam of groupparams">
+                        {{groupparam}}
+                    </option>
+                </select>
+                <mat-card-actions>
+                    <button mat-button (click)="scroll(target)" [disabled]="!excelForm.form.valid" class="btn btn-primary" type="submit">finalsubmit</button>
+                    <!-- <button mat-button (click)="reset()" class="btn btn-danger">Reset</button> -->
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+    <!-- <mat-radio-group aria-label="Select an option">
+                <mat-radio-button class="mx-3" *ngFor="let groupparam of groupparams,let j = index" ngModel
+                    name={{groupparam}}>
+                    {{groupparam}}
+                </mat-radio-button>
+            </mat-radio-group> -->
+
+    <!-- </div> -->
+</form>
+
+<!-- table by location -->
+<!-- <p>data : </p> -->
+<!-- //chart -->
+<!-- end chart  -->
+<div #target class="col-lg-12 container-fluid" id="target">
+    <div class="container my-5 d-flex justify-content-center DivChart">
+        <canvas class=" " id="myChart"></canvas>
+      </div>
+      <div *ngIf="excelForm.submitted" class="d-flex justify-content-center ">
+        <span class="mx-2"><code>y-axis </code><em>{{y_axis_data}}</em></span>
+        <span class="mx-2"><code>x-axis </code><em>{{selected_groupparam}}</em></span>
+      </div>
+   
+</div>
+
+<!-- end charts -->

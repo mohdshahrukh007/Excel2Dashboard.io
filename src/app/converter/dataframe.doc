@@ -1,0 +1,285 @@
+// dataframe
+for unique data in dataframe
+distinct()
+this.df.deflate((row: any) => row['Country'
+]).distinct().toArray();
+    // console.log(this.df.detectTypes().toString());
+    // console.log(this.df.distinct((row: any) => row.Country).toString());
+    // console.log(this.df.subset(Array.from(this.chkbox_col_data)).toString());
+getcol() {
+    console.log("values objectContaining");
+    //by group
+    // console.log(this.df.groupBy((row: any) => row.Segment));
+    // this.filtereddata = this.df.getColumnNames();
+    //or
+    // let filtereddata = this.df.deflat((row: any) => row.Country);
+
+    //  for list of country  
+    // let x = ['Country', 'Units Sold']
+    // this.filtereddata = this.df.subset(x).toArray();
+    // console.log('this.df.toRows()');
+    // console.log(this.df.sum().toArray());
+
+    // console.log(this.df.getColumnNames().toJSON());
+    // console.log(this.df.getColumnNames('Segment').sum());
+
+    //printing
+    // var summmarized = this.df
+    ///   // .where((row: any) => row.Country)
+    //   .groupBy((row: any) => row['Country'])                         // Group by client.
+    //   .inflate();                                             // Series -> dataframe.
+    // console.log('summmarized');
+    // console.log(summmarized.toString());
+  }
+
+
+    // console.log(this.df.getSeries("Country").toArray());
+    // console.log(this.df.getSeries("Units Sold").summarize());
+    // console.log(this.df.subset(["Units Sold"]).toString()); //get value only
+
+      // const summary = this.df.summarize();
+    // console.log(summary);
+    // console.log(this.keysdata[0]);
+
+    
+    // console.log('x axis data...');
+    // this.users_dataframe = this.df.subset(
+    //   Array.from(this.chkbox_col_data)
+    //   // ["Month Number", "Units Sold"]
+    // ).getColumnNames();
+
+
+get unique row --done
+get trim data --done
+
+todo
+get sum data of unique col --working...
+get sum avg of all data --show only numeric data---working...
+get pie chart of country
+
+
+
+prob--------------------------------
+async await in file system
+
+
+//2/7  updated ts file 
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import * as XLSX from "xlsx";
+import { DataFrame } from 'data-forge'
+import { Chart } from 'chart.js';
+@Component({
+  selector: 'app-converter',
+  templateUrl: './converter.component.html',
+  styleUrls: ['./converter.component.css']
+})
+export class ConverterComponent implements OnInit {
+  filtereddata: any[] = []
+  showdata: boolean
+  arraydata: any[] = []
+  file: any
+  // convertedJson: any[] = []
+   excel_data: any = []
+  chkbox_col_data = new Set();
+  df: any
+  xaxises: any[] = []
+  groupparams: string = ""
+  selected_groupparam: string = ""
+
+  keysdata: string[] = []
+  valueData: number[] = []
+  valuesdata: any
+  up_data: any
+  y_axis_data: any
+  // groupparam: string = "null"
+  constructor() {
+    this.showdata = false
+  }
+  ngOnInit(): void {
+
+  }
+
+  reset() { 
+    // this.data=[];
+    this.keysdata=[];
+    this.groupparams=""
+    this.y_axis_data=[];
+    this.xaxises=[];
+    this.axis_selection();
+
+  }
+  submitted:boolean = false
+  chart_type:string="line"
+  onSubmit(excelForm: any): void {
+    let x = excelForm.form.value;
+    // this.chart_type=excelForm.chartType
+    for (let index = 0; index < Object.keys(x).length; index++) {
+      if (Object.values(x)[index] == true) {
+        console.log("selected x axis");
+        this.y_axis_data=(Object.keys(x)[index]);
+      }
+    }
+    for (let jndex = 0; jndex < Object.keys(x).length; jndex++) {
+      if (Object.keys(x)[jndex] == 'groupparam') {
+        console.log("groupby_param (y axis)");
+        this.selected_groupparam = Object.values<any>(x)[jndex];
+      }
+    }
+    this.axis_selection();
+    // this.initchart();
+     this.submitted=true;
+  }
+
+  // excel to json
+  
+     obj_converter(event:any){
+       return new Promise((resolve,reject)=>{
+    const selectedFile = event.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.readAsBinaryString(selectedFile);
+       fileReader.onload = (event: any) => {
+        let binaryData = event.target.result;
+        let workbook = XLSX.read(binaryData, { type: 'binary' });
+          workbook.SheetNames.forEach(sheet => {
+          this.arraydata = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {
+            blankrows: false,
+            raw: true,
+            rawNumbers: true
+          });
+          resolve(this.arraydata);
+          if (this.arraydata.length<0) return reject("no data found") 
+        })
+      }
+    })
+      
+  }
+  ColoumlType:any[]=[]
+  getColumnTypes(dfdata:any){
+   let Type = dfdata.detectTypes().toArray()
+     const types = Type.filter((e:any)=> {
+       if(e.Type=="number") return this.ColoumlType.push(e.Column);
+       else return;
+      });
+    return this.ColoumlType;
+  }
+ async onFileSelected(event: any) {
+    const replaceKeys = (object: any) => {
+    Object.keys(object).forEach(function (key) {
+      const removeSpace = key.trim();
+      const newKey = removeSpace.toString();
+      if (object[key] && typeof object[key] === 'object') {
+        replaceKeys(object[key]);
+      }
+      if (key !== newKey) {
+        object[newKey] = object[key];
+        delete object[key];
+      }
+    });
+    return object;
+  }
+// console.log('before_calling');
+this.obj_converter(event).then((data)=>{
+ //after data fetched
+ this.showdata= true;
+ this.up_data = replaceKeys(data);
+ this.df = new DataFrame(this.up_data);
+
+ this.xaxises = this.getColumnTypes(this.df);
+//  console.log(this.xaxises);
+  this.groupparams = this.df.getColumnNames();
+// console.log('after_calling');
+
+}).catch((e)=>{console.log(e)})
+//if data is not fetched
+  }
+  columnName: any
+  user_selection: string = ""
+  users_dataframe: any[] = []
+  // get colmn data 
+  axis_selection() {
+    // get x axis
+    this.keysdata = this.df.deflate((row: any) => row[this.selected_groupparam]).distinct().toArray();
+    //get y axis
+    var summmarized = this.df
+      .groupBy((row: any) => row[this.selected_groupparam])
+      .select((group: any) => ({
+        [this.y_axis_data]: group.deflate((row: any) => row[this.y_axis_data]).sum(),
+      }))
+      .inflate();
+      var summmarized_array = summmarized.toArray();
+      summmarized_array.map((e: any) => {
+      this.users_dataframe.push(e[this.y_axis_data])
+    })
+    //show chart
+    this.initchart(this.keysdata,this.users_dataframe,'bar');
+    this.initchart(this.keysdata,this.users_dataframe,'line');
+  }
+
+  // user data end---
+  //------chart------
+  num: number = 0
+  initchart(xaxis: any,yaxis:any,label:any) {
+    // this.keysdata = this.df.deflate((row: any) => row[this.selected_groupparam]).distinct().toArray();
+    // const summary = this.df.summarize();
+    console.log(this.keysdata);
+    console.log(this.valueData);
+    // console.log(this.df.getSeries("Country").toArray());
+    // console.log(this.df.getSeries("Units Sold").summarize());
+    // console.log(this.df.subset(["Units Sold"]).toString()); //get value only
+    var myChart = new Chart('myChart', {
+      type: label,
+      // type: 'line',
+      // type: 'doughnut',
+      // text:"demo data",
+      data: {
+        //x axis
+        // labels: this.df.getSeries("Year").toArray(),
+        labels:xaxis,
+        // labels: this.keysdata,
+        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets:
+          [{
+            label: 'Dynamic Data',
+            //y axis
+            // data: this.df.getSeries("Units Sold").toArray(),
+            data:yaxis,
+              // this.users_dataframe,
+            //  this.df.getSeries('Product').sum(),
+            // [12, 5],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 2
+          }]
+      },
+      options: {
+      }
+    });
+  }
+
+  scroll(el: HTMLElement) {
+    el.scrollIntoView();
+}
+}
+add 
+
+// this.myChart.data.labels={labels:this.keysdata};
+//   this.myChart.data.datasets.push(
+//  {  
+//       label:column.AddCol,
+//       data:this.df.getSeries(column.AddCol).toArray(),
+      
+//     },);
